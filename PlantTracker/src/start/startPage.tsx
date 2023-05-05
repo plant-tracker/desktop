@@ -25,6 +25,8 @@ export function StartPage(): JSX.Element {
             <Text style={styles.header.text}>Plant Tracker</Text>
           </View>
 
+          <AppButton backgroundColor='black' textColor='white' iconBlob={require('../assets/icon-apple.png')}
+            label='Continue with Apple' onClick={() => setPage(Page.Home)} />
           <AppButton backgroundColor='#1877f2' textColor='white' iconBlob={require('../assets/icon-fb.png')}
             label='Continue with Facebook' onClick={() => setPage(Page.Home)} />
           <AppButton backgroundColor='white' textColor='black' hoverBackgroundColor='#efefef' iconBlob={require('../assets/icon-google.png')}

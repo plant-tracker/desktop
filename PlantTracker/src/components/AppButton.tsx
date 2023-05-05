@@ -4,6 +4,8 @@ import {
   Pressable,
 	StyleSheet,
   Text,
+  TextStyle,
+  ViewStyle,
 } from 'react-native';
 import AppStyles from '../AppStyles';
 
@@ -11,9 +13,11 @@ type AppButtonProps = {
   backgroundColor: string,
   hoverBackgroundColor?: string,
   textColor: string,
-	iconBlob: any,
+	iconBlob?: any,
   label: string,
   narrow?: boolean,
+  buttonStyle?: ViewStyle,
+  textStyle?: TextStyle,
   onClick: () => void,
 };
 
@@ -22,6 +26,7 @@ export function AppButton(props: AppButtonProps): JSX.Element {
 
   const getStyles = (pressed: boolean) => [
     styles.button,
+    props.buttonStyle,
     { backgroundColor: props.backgroundColor },
     hovered && styleHovered,
     pressed && stylePressed,
@@ -41,6 +46,7 @@ export function AppButton(props: AppButtonProps): JSX.Element {
       width: props.narrow ? 'auto' : 500,
       display: 'flex',
       flexDirection: 'row',
+      alignItems: 'center',
       justifyContent: 'center',
       gap: 10,
 
@@ -58,8 +64,8 @@ export function AppButton(props: AppButtonProps): JSX.Element {
       onHoverOut={_ => setHovered(false)}
       onPress={props.onClick}
     >
-			<Image source={props.iconBlob}/>
-			<Text style={[styles.button.text, { color: props.textColor }]}>
+      {props.iconBlob && <Image source={props.iconBlob}/>}
+			<Text style={[styles.button.text, props.textStyle, { color: props.textColor }]}>
         { props.label }
       </Text>
 		</Pressable>

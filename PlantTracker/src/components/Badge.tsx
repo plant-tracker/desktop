@@ -26,6 +26,7 @@ const styles = StyleSheet.create({
 		paddingHorizontal: 10,
 		backgroundColor: '#ADDDDA',
 		borderRadius: 12,
+		gap: 6,
 	},
 	text: {
 		...AppStyles.text,

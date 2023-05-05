@@ -1,4 +1,4 @@
-import { Image, Pressable, StyleSheet, Text, View } from 'react-native';
+import { FlexAlignType, Image, Pressable, StyleSheet, Text, View } from 'react-native';
 import { Card } from './Card';
 import { Task, TaskType } from '../model/task';
 import AppStyles from '../AppStyles';
@@ -15,7 +15,7 @@ export function CardPlantWater(props: CardPlantWaterProps): JSX.Element {
 	const title = getTitle(task.type);
 
 	return (
-		<Pressable onPress={() => {}}>
+		<Pressable onPress={() => console.log('TODO')}>
 			<Card>
 				<View style={styles.card}>
 					<View style={styles.photo}>
@@ -23,11 +23,11 @@ export function CardPlantWater(props: CardPlantWaterProps): JSX.Element {
 					</View>
 					<View style={styles.center}>
 						<Text style={styles.header}>{title}</Text>
-						<View style={[styles.row, { flex: 1 }]}>
+						<View style={[styles.row, styles.row.rowMiddle]}>
 							<Text style={styles.plantName}>{plant.name}</Text>
 							<Text style={styles.plantSpecies}>{plant.species}</Text>
 						</View>
-						<View style={[styles.row, styles.duration]}>
+						<View style={[styles.row, styles.row.rowEnd]}>
 							<Badge iconBlob={require('../assets/icon-task-water.svg')} label={getRemainingTime(task)} />
 						</View>
 					</View>
@@ -68,6 +68,13 @@ const styles = StyleSheet.create({
 		flexDirection: 'row',
 		gap: 10,
 		alignItems: 'center',
+		rowMiddle: {
+			flex: 1,
+			alignItems: 'flex-start' as FlexAlignType,
+		},
+		rowEnd: {
+			justifyContent: 'flex-end' as any,
+		},
 	},
 	plantName: {
 		...AppStyles.text,
@@ -79,9 +86,6 @@ const styles = StyleSheet.create({
 		fontSize: 12,
 		fontWeight: '300',
 		fontStyle: 'italic',
-	},
-	duration: {
-		justifyContent: 'flex-end',
 	},
 });
 
