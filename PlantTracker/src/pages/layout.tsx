@@ -18,11 +18,24 @@ import { CounterStat } from '../components/CounterStat';
 type LayoutProps = {
   headerIconBlob: any,
   headerTitle: string,
+  onSave?: () => void,
 }
 
 export function Layout(props: PropsWithChildren<LayoutProps>): JSX.Element {
 
-  const { setPage, userStorage } = useContext(AppContext)!;
+  const { page, setPage, userStorage } = useContext(AppContext)!;
+
+  const buttonsDefault = <>
+    <AppButton backgroundColor='#3ddc84' textColor='black' iconBlob={require('../assets/icon-android.png')} narrow={true}
+      label='Download Android App' onClick={() => console.log('TODO')} />
+    <IconButton iconBlob={require('../assets/icon-github.png')} onClick={() => console.log('TODO')} />
+  </>;
+  const buttonsSave = <>
+    <AppButton backgroundColor='#2FE1C7' textColor='black' iconBlob={require('../assets/icon-save.svg')} narrow={true}
+      label='Save' onClick={() => props.onSave?.()} />
+    <AppButton backgroundColor='#E4A834' textColor='black' iconBlob={require('../assets/icon-cancel.svg')} narrow={true}
+      label='Cancel' onClick={() => setPage(Page.Plants)} />
+  </>;
 
   return (
     <SafeAreaView style={styles.root}>
@@ -33,13 +46,13 @@ export function Layout(props: PropsWithChildren<LayoutProps>): JSX.Element {
 
             <View style={styles.leftBar.iconsTop}>
               <IconButton iconBlob={require('../assets/icon-home.png')} label='Home' onClick={() => setPage(Page.Home)} />
-              <IconButton iconBlob={require('../assets/icon-plant.png')} label='Plants' onClick={() => setPage(Page.Plants)} />
-              <IconButton iconBlob={require('../assets/icon-add.png')} label='Add plant' onClick={() => {}} />
+              <IconButton iconBlob={require('../assets/icon-plant.svg')} label='Plants' onClick={() => setPage(Page.Plants)} />
+              <IconButton iconBlob={require('../assets/icon-add.png')} label='Add plant' onClick={() => setPage(Page.AddPlant)} />
             </View>
 
             <View style={styles.leftBar.iconsBottom}>
-              <IconButton iconBlob={require('../assets/icon-settings.png')} label='Settings' onClick={() => {}} />
-              <IconButton iconBlob={require('../assets/icon-logout.png')} label='Log out' onClick={() => {}} />
+              <IconButton iconBlob={require('../assets/icon-settings.png')} label='Settings' onClick={() => console.log('TODO')} />
+              <IconButton iconBlob={require('../assets/icon-logout.png')} label='Log out' onClick={() => console.log('TODO')} />
             </View>
 
           </View>
@@ -68,9 +81,7 @@ export function Layout(props: PropsWithChildren<LayoutProps>): JSX.Element {
               </View>
 
               <View style={styles.rightSide.bottomBar.buttons}>
-                <AppButton backgroundColor='#3ddc84' textColor='black' iconBlob={require('../assets/icon-android.png')} narrow={true}
-                  label='Download Android App' onClick={() => {}} />
-                <IconButton iconBlob={require('../assets/icon-github.png')} onClick={() => {}} />
+              { page !== Page.AddPlant ? buttonsDefault : buttonsSave }
               </View>
 
             </View>

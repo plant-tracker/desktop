@@ -7,15 +7,15 @@
   IgnorableNamespaces="uap mp">
 
   <Identity
-    Name="8f54cac0-6dbb-405d-8bce-47dcfc2768e2"
-    Publisher="CN=PC"
+    Name="8fc713de-dc3b-49d0-899c-f64292ef8170"
+    Publisher="CN=jakub"
     Version="1.0.0.0" />
 
-  <mp:PhoneIdentity PhoneProductId="8f54cac0-6dbb-405d-8bce-47dcfc2768e2" PhonePublisherId="00000000-0000-0000-0000-000000000000"/>
+  <mp:PhoneIdentity PhoneProductId="8fc713de-dc3b-49d0-899c-f64292ef8170" PhonePublisherId="00000000-0000-0000-0000-000000000000"/>
 
   <Properties>
     <DisplayName>PlantTracker</DisplayName>
-    <PublisherDisplayName>PC</PublisherDisplayName>
+    <PublisherDisplayName>jakub</PublisherDisplayName>
     <Logo>Assets\StoreLogo.png</Logo>
   </Properties>
 
@@ -33,10 +33,10 @@
       Executable="$targetnametoken$.exe"
       EntryPoint="PlantTracker.App">
       <uap:VisualElements
-        DisplayName="PlantTracker"
+        DisplayName="Plant Tracker"
         Square150x150Logo="Assets\Square150x150Logo.png"
         Square44x44Logo="Assets\Square44x44Logo.png"
-        Description="PlantTracker"
+        Description="Plant Tracker"
         BackgroundColor="transparent">
         <uap:DefaultTile Wide310x150Logo="Assets\Wide310x150Logo.png"/>
         <uap:SplashScreen Image="Assets\SplashScreen.png" />

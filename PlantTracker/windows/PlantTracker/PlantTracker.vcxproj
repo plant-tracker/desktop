@@ -6,7 +6,7 @@
     <CppWinRTOptimized>true</CppWinRTOptimized>
     <CppWinRTRootNamespaceAutoMerge>true</CppWinRTRootNamespaceAutoMerge>
     <MinimalCoreWin>true</MinimalCoreWin>
-    <ProjectGuid>{3df9188f-5e6a-49c9-87e2-b2ee0bad8a29}</ProjectGuid>
+    <ProjectGuid>{27ee783b-1160-4bb9-8665-894bbe28ec1c}</ProjectGuid>
     <ProjectName>PlantTracker</ProjectName>
     <RootNamespace>PlantTracker</RootNamespace>
     <DefaultLanguage>en-US</DefaultLanguage>
@@ -158,6 +158,10 @@
     </Page>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="$(MSBuildThisFileDirectory)\..\..\node_modules\@react-native-picker\picker\windows\ReactNativePicker\ReactNativePicker.vcxproj">
+      <Project>{BEDCC600-4541-41F2-AA46-9E058202B6AD}</Project>
+      <UseLibraryDependencyInputs>true</UseLibraryDependencyInputs>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ReactNativeWindowsTargets">

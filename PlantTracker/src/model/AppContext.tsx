@@ -4,7 +4,8 @@ import { SAMPLE_USER_STORAGE, UserStorage } from './userStorage';
 export enum Page {
 	Start,
 	Home,
-  Plants,
+	Plants,
+  AddPlant,
 };
 
 export type AppContextType = {
@@ -46,7 +47,7 @@ const savedAppReducer = (state, action) => {
 export const AppContext = createContext<AppContextType | null>(null);
 
 export function AppProvider(props: { children: ReactNode }) {
-  const [page, setPage] = useState(Page.Start);
+  const [page, setPage] = useState(Page.AddPlant);
   const [userStorage, setUserStorage] = useState(SAMPLE_USER_STORAGE);
   // const [savedApp, setSavedApp] = useReducer(savedAppReducer, []);
 

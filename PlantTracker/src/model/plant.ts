@@ -1,6 +1,6 @@
 export interface Plant {
 	name: string;
-	type: 'fern' | 'seed plant' | 'tree';
+	type: 'fern' | 'seed plant' | 'tree' | 'other';
 	species: string;
 	location: string;
 	photoUrl: string;
