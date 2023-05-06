@@ -1,17 +1,26 @@
 import React, { ReactNode, createContext, useState } from 'react';
 import { SAMPLE_USER_STORAGE, UserStorage } from './userStorage';
+import { Plant } from './plant';
+import { Task } from './task';
 
 export enum Page {
 	Start,
 	Home,
 	Plants,
   AddPlant,
+  ViewPlant,
+  AddTask,
 };
 
 export type AppContextType = {
 	page: Page,
 	setPage: (page: Page) => void,
   userStorage: UserStorage;
+
+  currentPlant?: Plant;
+  setPageWithPlant: (page: Page, plant: Plant, task?: Task) => void;
+
+  currentTask?: Task;
 };
 
 
@@ -47,17 +56,26 @@ const savedAppReducer = (state, action) => {
 export const AppContext = createContext<AppContextType | null>(null);
 
 export function AppProvider(props: { children: ReactNode }) {
-  const [page, setPage] = useState(Page.AddPlant);
+  const [page, setPage] = useState(Page.Plants);
   const [userStorage, setUserStorage] = useState(SAMPLE_USER_STORAGE);
+  const [currentPlant, setCurrentPlant] = useState<Plant>();
+  const [currentTask, setCurrentTask] = useState<Task>();
   // const [savedApp, setSavedApp] = useReducer(savedAppReducer, []);
 
-	// setPage(Page.Home);
+  const setPageWithPlant = (page: Page, plant: Plant, task?: Task) => {
+    setCurrentPlant(plant);
+    setCurrentTask(task);
+    setPage(page);
+  };
 
   return (
     <AppContext.Provider
       value={{
         page, setPage,
         userStorage,
+        currentPlant,
+        currentTask,
+        setPageWithPlant,
       }}
     >
       {props.children}

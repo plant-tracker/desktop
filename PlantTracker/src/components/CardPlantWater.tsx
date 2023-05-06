@@ -12,7 +12,6 @@ export type CardPlantWaterProps = {
 export function CardPlantWater(props: CardPlantWaterProps): JSX.Element {
 	const task = props.task;
 	const plant = task.plant;
-	const title = getTitle(task.type);
 
 	return (
 		<Pressable onPress={() => console.log('TODO')}>
@@ -22,7 +21,7 @@ export function CardPlantWater(props: CardPlantWaterProps): JSX.Element {
 						<Image style={styles.photo} source={{uri: plant.photoUrl}}></Image>
 					</View>
 					<View style={styles.center}>
-						<Text style={styles.header}>{title}</Text>
+						<Text style={styles.header}>{task.name}</Text>
 						<View style={[styles.row, styles.row.rowMiddle]}>
 							<Text style={styles.plantName}>{plant.name}</Text>
 							<Text style={styles.plantSpecies}>{plant.species}</Text>
@@ -88,13 +87,3 @@ const styles = StyleSheet.create({
 		fontStyle: 'italic',
 	},
 });
-
-function getTitle(type: TaskType) {
-	switch (type) {
-		case 'fertilize': return 'Fertilize the soil';
-		case 'prune': return 'Prune the plant';
-		case 'spray': return 'Spray the leaves';
-		case 'water': return 'Water the soil';
-		default: throw new Error(`Invalid task type: ${type}`);
-	}
-}

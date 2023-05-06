@@ -12,16 +12,11 @@ export function getRemainingTime(task: Task): string {
 		const ONE_DAY_MS = 1000 * 60 * 60 * 24
 		const daysPassedSinceReminderWasCreated = (now.valueOf() - task.addedDate.valueOf()) / ONE_DAY_MS;
 		const reminderOccursInXDays = daysPassedSinceReminderWasCreated % task.reminder.everyXDays;
-		if (reminderOccursInXDays > 0)
+		if (reminderOccursInXDays > 1)
 			return getForm('In % day', reminderOccursInXDays);
 
-		// task.reminder is at 14:30
-		// if it's earlier, i.e. hour < 14 or (hour == 14 and minutes <= 30), then show minutes or hours left
-		if (now.getHours() < task.reminder.atHour || (now.getHours() === task.reminder.atHour && now.getMinutes() <= task.reminder.atMinute))
-			milliseconds = 1000 * 60 * (task.reminder.atHour * 60 - now.getHours() * 60 + task.reminder.atMinute - now.getMinutes());
-		else
-			// otherwise, one day
-			return 'In 1 day';
+		milliseconds = 1000 * 60 * (task.reminder.atHour * 60 - now.getHours() * 60 + task.reminder.atMinute - now.getMinutes());
+		if (milliseconds < 0) milliseconds += ONE_DAY_MS;
 	}
 
 	let seconds = Math.floor(milliseconds / 1000);
@@ -40,6 +35,31 @@ export function getRemainingTime(task: Task): string {
 	if (minutes > 0)
 		return getForm('In % minute', minutes);
 	return 'Right now';
+}
+
+export function getPeriod(task: Task): string {
+	if (task.reminder.type === 'once')
+		return `On ${formatDate(task.reminder.date)}`;
+	else
+		return getForm('Every % day', task.reminder.everyXDays);
+}
+
+export function getHour(task: Task): string {
+	if (task.reminder.type === 'once')
+		return formatTime(task.reminder.date.getHours(), task.reminder.date.getMinutes());
+	else
+		return formatTime(task.reminder.atHour, task.reminder.atMinute);
+}
+
+export function formatDate(date: Date): string {
+	const day = date.getDate();
+	const month = date.getMonth() + 1;
+	const year = date.getFullYear();
+  return `${day}.${('0' + month).slice(-2)}.${year}`;
+}
+
+export function formatTime(hour: number, minutes: number): string {
+  return `${hour}:${('0' + minutes).slice(-2)}`;
 }
 
 function getForm(pattern: string, n: number): string {

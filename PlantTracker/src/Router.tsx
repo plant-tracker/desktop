@@ -4,6 +4,8 @@ import { AppContext, Page } from './model/AppContext';
 import { HomePage } from './pages/homePage';
 import { PlantsPage } from './pages/plantsPage';
 import { AddPlantPage } from './pages/addPlantPage';
+import { ViewPlantPage } from './pages/viewPlantPage';
+import { AddTaskPage } from './pages/addTaskPage';
 
 export function Router(): JSX.Element {
 
@@ -15,6 +17,8 @@ export function Router(): JSX.Element {
       case Page.Home: return <HomePage />;
       case Page.Plants: return <PlantsPage />;
       case Page.AddPlant: return <AddPlantPage />;
+      case Page.ViewPlant: return <ViewPlantPage plant={ctx.currentPlant!} />;
+      case Page.AddTask: return <AddTaskPage plant={ctx.currentPlant!} />;
       default: return <></>;
     }
   };

@@ -21,3 +21,13 @@ export interface Task {
 	reminder: Reminder;
 	addedDate: Date;
 }
+
+export function getTitle(type: TaskType) {
+	switch (type) {
+		case 'fertilize': return 'Fertilize the soil';
+		case 'prune': return 'Prune the plant';
+		case 'spray': return 'Spray the leaves';
+		case 'water': return 'Water the soil';
+		default: throw new Error(`Invalid task type: ${type}`);
+	}
+}

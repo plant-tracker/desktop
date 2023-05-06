@@ -28,8 +28,8 @@ export function PlantsPage(): JSX.Element {
 			</View>
 
       <View style={styles.cards}>
-        {filteredList().map(plant => (
-          <CardPlant plant={plant} />
+        {filteredList().map((plant, index) => (
+          <CardPlant plant={plant} key={index} />
         ))}
         {filteredList().length % 2 === 1 && <EmptyCard />}
       </View>

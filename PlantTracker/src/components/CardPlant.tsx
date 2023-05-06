@@ -3,6 +3,8 @@ import { Card } from './Card';
 import { TaskType } from '../model/task';
 import AppStyles from '../AppStyles';
 import { Plant } from '../model/plant';
+import { AppContext, Page } from '../model/AppContext';
+import { useContext } from 'react';
 
 export type CardPlantProps = {
 	plant: Plant;
@@ -11,8 +13,10 @@ export type CardPlantProps = {
 export function CardPlant(props: CardPlantProps): JSX.Element {
 	const plant = props.plant;
 
+  const { setPageWithPlant } = useContext(AppContext)!;
+
 	return (
-		<Pressable onPress={() => console.log('TODO')}>
+		<Pressable onPress={() => setPageWithPlant(Page.ViewPlant, plant)}>
 			<Card>
 				<View style={styles.card}>
 					<View style={styles.photo}>
@@ -56,6 +60,7 @@ const styles = StyleSheet.create({
 	card: {
 		display: 'flex',
 		flexDirection: 'row',
+		height: 125,
 	},
 	photo: {
 		width: 125,
