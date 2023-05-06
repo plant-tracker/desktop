@@ -1,5 +1,5 @@
 import { Plant } from './plant';
-import { ReminderOnce, Task } from './task';
+import { ReminderOnce, ReminderRepeat, Task, getTitle } from './task';
 
 export interface UserStorage {
 	email: string;
@@ -42,21 +42,27 @@ const p3: Plant = {
 };
 
 const addedDate = new Date();
+
 function inMinutes(minutes: number): ReminderOnce {
 	const date = new Date(addedDate);
 	date.setMinutes(addedDate.getMinutes() + minutes);
 	return { type: 'once', date };
 }
 
+function reminder(days: number, inHours: number): ReminderRepeat {
+	const atHour = (addedDate.getHours() + inHours) % 24;
+	return { type: 'repeat', everyXDays: days, atHour, atMinute: 0 };
+}
+
 export const SAMPLE_USER_STORAGE: UserStorage = {
 	email: 'user@plants.com',
 	plants: [ p1, p2, p3 ],
 	tasks: [
-		{ plant: p1, type: 'water', addedDate, name: '', reminder: inMinutes(8) },
-		{ plant: p2, type: 'water', addedDate, name: '', reminder: inMinutes(8) },
-		{ plant: p2, type: 'spray', addedDate, name: '', reminder: inMinutes(10) },
-		{ plant: p3, type: 'spray', addedDate, name: '', reminder: inMinutes(10) },
-		{ plant: p1, type: 'fertilize', addedDate, name: '', reminder: inMinutes(500) },
+		{ plant: p1, type: 'water', addedDate, name: getTitle('water'), reminder: reminder(5, 1) },
+		{ plant: p1, type: 'fertilize', addedDate, name: getTitle('fertilize'), reminder: inMinutes(500) },
+		{ plant: p2, type: 'water', addedDate, name: getTitle('water'), reminder: reminder(8, 0) },
+		{ plant: p2, type: 'spray', addedDate, name: getTitle('spray'), reminder: reminder(10, 15) },
+		{ plant: p3, type: 'spray', addedDate, name: getTitle('spray'), reminder: reminder(1, 2) },
 	],
 };
 

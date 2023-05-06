@@ -81,7 +81,7 @@ export function Layout(props: PropsWithChildren<LayoutProps>): JSX.Element {
               </View>
 
               <View style={styles.rightSide.bottomBar.buttons}>
-              { page !== Page.AddPlant ? buttonsDefault : buttonsSave }
+              { (page !== Page.AddPlant && page !== Page.AddTask) ? buttonsDefault : buttonsSave }
               </View>
 
             </View>
@@ -170,6 +170,7 @@ const styles = StyleSheet.create({
     gap: 15,
     icon: {
       height: 50,
+      width: 40,
     },
     text: {
       ...AppStyles.text,

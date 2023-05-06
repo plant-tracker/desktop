@@ -19,8 +19,8 @@ export function HomePage(): JSX.Element {
 
       <Tabs tabs={['All', 'Water', 'Fertilize', 'Spray', 'Prune']} selectedChanged={label => setSelected(label.toLowerCase()) } />
       <View style={styles.cards}>
-        {userStorage.tasks.filter(t => t.type === selected || selected === 'all').map(task => (
-          <CardPlantWater task={task} />
+        {userStorage.tasks.filter(t => t.type === selected || selected === 'all').map((task, index) => (
+          <CardPlantWater task={task} key={index} />
         ))}
         {userStorage.tasks.filter(t => t.type === selected || selected === 'all').length % 2 === 1 && <EmptyCard />}
       </View>

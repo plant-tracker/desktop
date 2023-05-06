@@ -73,7 +73,7 @@ export function AddPlantPage(): JSX.Element {
           {/* <Image TODO /> */}
           <View style={styles.buttonsRow}>
             <AppButton backgroundColor='#2FE1C7' textColor='black' iconBlob={require('../assets/icon-add-plant-2.svg')} narrow={true}
-              label='Upload image 1' onClick={() => console.log('TODO')} buttonStyle={styles.button} textStyle={{ fontSize: 16 }} />
+              label='Upload image' onClick={() => console.log('TODO')} buttonStyle={styles.button} textStyle={{ fontSize: 16 }} />
             <AppButton backgroundColor='#FF5D5D' textColor='black' iconBlob={require('../assets/icon-trash.svg')} narrow={true}
               label='Delete image' onClick={() => console.log('TODO')} buttonStyle={styles.button} textStyle={{ fontSize: 16 }} />
           </View>
