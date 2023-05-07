@@ -1,6 +1,7 @@
 #include "pch.h"
 #include "ReactPackageProvider.h"
 #include "NativeModules.h"
+#include "Notifications.h"
 
 using namespace winrt::Microsoft::ReactNative;
 

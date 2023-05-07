@@ -28,7 +28,7 @@ export function Layout(props: PropsWithChildren<LayoutProps>): JSX.Element {
   const buttonsDefault = <>
     <AppButton backgroundColor='#3ddc84' textColor='black' iconBlob={require('../assets/icon-android.png')} narrow={true}
       label='Download Android App' onClick={() => console.log('TODO')} />
-    <IconButton iconBlob={require('../assets/icon-github.png')} onClick={() => console.log('TODO')} />
+    <IconButton iconBlob={require('../assets/icon-github.svg')} onClick={() => console.log('TODO')} />
   </>;
   const buttonsSave = <>
     <AppButton backgroundColor='#2FE1C7' textColor='black' iconBlob={require('../assets/icon-save.svg')} narrow={true}
@@ -51,7 +51,7 @@ export function Layout(props: PropsWithChildren<LayoutProps>): JSX.Element {
             </View>
 
             <View style={styles.leftBar.iconsBottom}>
-              <IconButton iconBlob={require('../assets/icon-settings.png')} label='Settings' onClick={() => console.log('TODO')} />
+              <IconButton iconBlob={require('../assets/icon-settings.svg')} label='Settings' onClick={() => setPage(Page.Settings)} />
               <IconButton iconBlob={require('../assets/icon-logout.png')} label='Log out' onClick={() => console.log('TODO')} />
             </View>
 

@@ -47,7 +47,7 @@ export function LinkButton(props: LinkButtonProps): JSX.Element {
       onHoverOut={_ => setHovered(false)}
       onPress={props.onClick}
     >
-			<Image source={props.iconBlob}/>
+			<Image source={props.iconBlob} style={{height: 20}}/>
 			{props.label && <Text style={styles.button.text}>{ props.label }</Text>}
 		</Pressable>
 	);

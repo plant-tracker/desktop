@@ -6,6 +6,7 @@ import { PlantsPage } from './pages/plantsPage';
 import { AddPlantPage } from './pages/addPlantPage';
 import { ViewPlantPage } from './pages/viewPlantPage';
 import { AddTaskPage } from './pages/addTaskPage';
+import { SettingsPage } from './pages/settingsPage';
 
 export function Router(): JSX.Element {
 
@@ -19,6 +20,7 @@ export function Router(): JSX.Element {
       case Page.AddPlant: return <AddPlantPage />;
       case Page.ViewPlant: return <ViewPlantPage plant={ctx.currentPlant!} />;
       case Page.AddTask: return <AddTaskPage plant={ctx.currentPlant!} />;
+      case Page.Settings: return <SettingsPage />;
       default: return <></>;
     }
   };
