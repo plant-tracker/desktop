@@ -1,11 +1,16 @@
 import { Task } from './task';
 
-export function getRemainingTime(task: Task): string {
+export type RemainingPast = { type: 'past' };
+export type RemainingDays = { type: 'days', days: number };
+export type RemainingTime = { type: 'time', days: number, hours: number, minutes: number, seconds: number };
+export type Remaining = RemainingPast | RemainingDays | RemainingTime;
+
+export function getRemaining(task: Task): Remaining {
 	const now = new Date();
 	let milliseconds;
 	if (task.reminder.type === 'once') {
 		if (task.reminder.date < now)
-			return 'Past';
+			return { type: 'past' } as RemainingPast;
 		milliseconds = task.reminder.date.valueOf() - now.valueOf();
 	} else {
 		// one day time in milliseconds
@@ -13,7 +18,7 @@ export function getRemainingTime(task: Task): string {
 		const daysPassedSinceReminderWasCreated = (now.valueOf() - task.addedDate.valueOf()) / ONE_DAY_MS;
 		const reminderOccursInXDays = daysPassedSinceReminderWasCreated % task.reminder.everyXDays;
 		if (reminderOccursInXDays > 1)
-			return getForm('In % day', reminderOccursInXDays);
+			return { type: 'days', days: reminderOccursInXDays } as RemainingDays;
 
 		milliseconds = 1000 * 60 * (task.reminder.atHour * 60 - now.getHours() * 60 + task.reminder.atMinute - now.getMinutes());
 		if (milliseconds < 0) milliseconds += ONE_DAY_MS;
@@ -28,13 +33,28 @@ export function getRemainingTime(task: Task): string {
   minutes = minutes % 60;
   hours = hours % 24;
 
-	if (days > 0)
-		return getForm('In % day', days);
-	if (hours > 0)
-		return getForm('In % hour', hours);
-	if (minutes > 0)
-		return getForm('In % minute', minutes);
-	return 'Right now';
+	return { type: 'time', days, hours, minutes, seconds } as RemainingTime;
+}
+
+export function getRemainingTime(task: Task): string {
+	const remaining = getRemaining(task);
+	switch (remaining.type) {
+
+		case 'past':
+			return 'Past';
+
+		case 'days':
+			return getForm('In % day', remaining.days);
+
+		case 'time':
+			if (remaining.days > 0)
+				return getForm('In % day', remaining.days);
+			if (remaining.hours > 0)
+				return getForm('In % hour', remaining.hours);
+			if (remaining.minutes > 0)
+				return getForm('In % minute', remaining.minutes);
+			return 'Right now';
+	}
 }
 
 export function getPeriod(task: Task): string {

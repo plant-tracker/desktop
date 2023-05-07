@@ -73,7 +73,9 @@ export function Tabs(props: TabsProps): JSX.Element {
 
 	return (
 		<View style={styles.tabs}>
-			{ props.tabs.map(label => <Tab label={label} selected={selected === label} onClick={() => setSelected(label)} />) }
+			{ props.tabs.map(label =>
+        <Tab label={label} selected={selected === label} onClick={() => setSelected(label)} key={label} />
+      )}
 		</View>
 	);
 }

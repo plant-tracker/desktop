@@ -49,9 +49,9 @@ function inMinutes(minutes: number): ReminderOnce {
 	return { type: 'once', date };
 }
 
-function reminder(days: number, inHours: number): ReminderRepeat {
+function reminder(days: number, inHours: number, atMinute: number = 0): ReminderRepeat {
 	const atHour = (addedDate.getHours() + inHours) % 24;
-	return { type: 'repeat', everyXDays: days, atHour, atMinute: 0 };
+	return { type: 'repeat', everyXDays: days, atHour, atMinute };
 }
 
 export const SAMPLE_USER_STORAGE: UserStorage = {
@@ -63,6 +63,11 @@ export const SAMPLE_USER_STORAGE: UserStorage = {
 		{ plant: p2, type: 'water', addedDate, name: getTitle('water'), reminder: reminder(8, 0) },
 		{ plant: p2, type: 'spray', addedDate, name: getTitle('spray'), reminder: reminder(10, 15) },
 		{ plant: p3, type: 'spray', addedDate, name: getTitle('spray'), reminder: reminder(1, 2) },
+
+		{ plant: p3, type: 'water', addedDate, name: getTitle('water'), reminder: inMinutes(2) },
+		{ plant: p3, type: 'fertilize', addedDate, name: getTitle('fertilize'), reminder: reminder(1, 0, addedDate.getMinutes() + 1) },
+		{ plant: p3, type: 'spray', addedDate, name: getTitle('spray'), reminder: reminder(1, 0, addedDate.getMinutes() + 2) },
+		{ plant: p2, type: 'prune', addedDate, name: getTitle('prune'), reminder: reminder(1, 0, addedDate.getMinutes() + 1) },
 	],
 };
 

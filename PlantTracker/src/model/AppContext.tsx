@@ -2,6 +2,7 @@ import React, { ReactNode, createContext, useState } from 'react';
 import { SAMPLE_USER_STORAGE, UserStorage } from './userStorage';
 import { Plant } from './plant';
 import { Task } from './task';
+import { Notifications } from '../notifications';
 
 export enum Page {
 	Start,
@@ -10,6 +11,7 @@ export enum Page {
   AddPlant,
   ViewPlant,
   AddTask,
+  Settings,
 };
 
 export type AppContextType = {
@@ -21,6 +23,9 @@ export type AppContextType = {
   setPageWithPlant: (page: Page, plant: Plant, task?: Task) => void;
 
   currentTask?: Task;
+
+  enableNotifications: boolean;
+  setEnableNotifications: (val: boolean) => void;
 };
 
 
@@ -56,10 +61,12 @@ const savedAppReducer = (state, action) => {
 export const AppContext = createContext<AppContextType | null>(null);
 
 export function AppProvider(props: { children: ReactNode }) {
-  const [page, setPage] = useState(Page.Plants);
+  const [page, setPage] = useState(Page.Home);
   const [userStorage, setUserStorage] = useState(SAMPLE_USER_STORAGE);
   const [currentPlant, setCurrentPlant] = useState<Plant>();
   const [currentTask, setCurrentTask] = useState<Task>();
+  const [enableNotifications, setEnableNotifications] = useState(true);
+  const [notificationService, setNotificationService] = useState<Notifications>();
   // const [savedApp, setSavedApp] = useReducer(savedAppReducer, []);
 
   const setPageWithPlant = (page: Page, plant: Plant, task?: Task) => {
@@ -67,6 +74,24 @@ export function AppProvider(props: { children: ReactNode }) {
     setCurrentTask(task);
     setPage(page);
   };
+
+  // notifications - create the service once
+  // and save it to the state
+  let notif: Notifications | undefined;
+  if (!notificationService) {
+    console.log('--- Notifications - create');
+    notif = new Notifications();
+    notif.start();
+    setNotificationService(notif);
+    notif.set(userStorage.tasks);
+  }
+  // when list of tasks or option to enable notifications change, update the service
+  console.log('--- Notifications - update', enableNotifications, userStorage.tasks);
+  notif = notif || notificationService;
+  if (enableNotifications)
+    notif!.set(userStorage.tasks);
+  else
+    notif!.set([]);
 
   return (
     <AppContext.Provider
@@ -76,6 +101,7 @@ export function AppProvider(props: { children: ReactNode }) {
         currentPlant,
         currentTask,
         setPageWithPlant,
+        enableNotifications, setEnableNotifications,
       }}
     >
       {props.children}
