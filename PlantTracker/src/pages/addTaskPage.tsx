@@ -5,9 +5,7 @@ import {
   StyleSheet,
   Text,
   TextInput,
-  TextStyle,
   View,
-  ViewStyle,
 } from 'react-native';
 import { Picker } from '@react-native-picker/picker';
 import { AppContext, Page } from '../model/AppContext';
@@ -18,22 +16,25 @@ import { CardPlant } from '../components/CardPlant';
 import { formatDate } from '../model/calculateNextTime';
 import { Task, TaskType, getTitle } from '../model/task';
 import { NumberInput } from '../components/NumberInput';
+import { repository } from '../model/firebase';
 
 export type AddTaskProps = {
 	plant: Plant;
+  editedTask?: Task;
 };
 
 export function AddTaskPage(props: AddTaskProps): JSX.Element {
 
   const plant = props.plant;
+  const editedReminder = props.editedTask?.reminder?.type === 'once' ? undefined : props.editedTask?.reminder;
 
   const { setPageWithPlant, userStorage } = useContext(AppContext)!;
 
-  const [name, onChangeName] = React.useState(getTitle('water'));
-  const [type, onChangeType] = React.useState<TaskType>('water');
-  const [xDays, onChangeXDays] = React.useState('1');
-  const [hours, onChangeHours] = React.useState('12');
-  const [minutes, onChangeMinutes] = React.useState('00');
+  const [name, onChangeName] = React.useState(props.editedTask?.name || getTitle('water'));
+  const [type, onChangeType] = React.useState<TaskType>(props.editedTask?.type || 'water');
+  const [xDays, onChangeXDays] = React.useState(editedReminder?.everyXDays ? ('' + editedReminder?.everyXDays) : '1');
+  const [hours, onChangeHours] = React.useState(editedReminder?.atHour ? ('' + editedReminder?.atHour) : '12');
+  const [minutes, onChangeMinutes] = React.useState(editedReminder?.atMinute ? ('' + editedReminder?.atMinute) : '00');
 
   let previousName = name;
   useEffect(() => {
@@ -46,7 +47,7 @@ export function AddTaskPage(props: AddTaskProps): JSX.Element {
     return !(value.length === 0 || !/^\d+$/.test(value) || parseInt(value) < min || parseInt(value) > max);
   };
 
-  const save = () => {
+  const save = async () => {
     if (!name || !type || !validate(xDays, 1, 365) || !validate(hours, 0, 23) || !validate(minutes, 0, 59) ) {
       Alert.alert('Please fill in all fields');
       return;
@@ -54,7 +55,7 @@ export function AddTaskPage(props: AddTaskProps): JSX.Element {
 
     const task: Task = {
       plant,
-      addedDate: new Date(),
+      created: new Date(),
       name,
       type,
       reminder: {
@@ -65,8 +66,13 @@ export function AddTaskPage(props: AddTaskProps): JSX.Element {
       },
     };
 
-    // TODO - API
-    userStorage.tasks.push(task);
+    if (props.editedTask) {
+      Object.assign(props.editedTask, task);
+      await repository.updatePlant(plant, userStorage.tasks);
+    } else {
+      userStorage.tasks.push(task);
+      await repository.updatePlant(plant, userStorage.tasks);
+    }
     setPageWithPlant(Page.Plants, plant);
   };
 
@@ -79,14 +85,14 @@ export function AddTaskPage(props: AddTaskProps): JSX.Element {
 
       <View style={styles.row}>
         <Image source={require('../assets/icon-calendar.svg')} />
-        <Text>Date added: {formatDate(plant.addedDate)}</Text>
+        <Text>Date added: {formatDate(plant.created)}</Text>
       </View>
 
       <View style={[styles.card, {marginTop: 30}]}>
 
-        <View style={styles.field}>
-          <Text style={[styles.field.label, {marginTop: 0}]}>Type</Text>
-          <View style={styles.field.select}>
+        <View style={AppStyles.field}>
+          <Text style={[AppStyles.field.label, {marginTop: 0}]}>Type</Text>
+          <View style={AppStyles.field.select}>
             <Picker selectedValue={type} onValueChange={(itemValue, itemIndex) => onChangeType(itemValue)} >
               <Picker.Item label="Water" value="water" />
               <Picker.Item label="Fertilize" value="fertilize" />
@@ -96,24 +102,24 @@ export function AddTaskPage(props: AddTaskProps): JSX.Element {
           </View>
         </View>
 
-        <View style={styles.field}>
-          <Text style={styles.field.label}>Short description</Text>
-          <TextInput style={styles.field.input} onChangeText={onChangeName} value={name} placeholder='Franek, Czarek, etc.' placeholderTextColor='#B8BCCA' />
+        <View style={AppStyles.field}>
+          <Text style={AppStyles.field.label}>Short description</Text>
+          <TextInput style={AppStyles.field.input} onChangeText={onChangeName} value={name} placeholder='Franek, Czarek, etc.' placeholderTextColor='#B8BCCA' />
         </View>
 
-        <Text style={styles.field.label}>Frequency:</Text>
+        <Text style={AppStyles.field.label}>Frequency:</Text>
 
         <View style={styles.row}>
           <Text>Repeat every</Text>
-          <NumberInput style={styles.field.input} onChangeText={onChangeXDays} value={xDays} maxValue={366} />
+          <NumberInput style={AppStyles.field.input} onChangeText={onChangeXDays} value={xDays} maxValue={366} />
           <Text>day(s)</Text>
         </View>
 
         <View style={[styles.row, {marginTop: 10}]}>
           <Text>at time</Text>
-          <NumberInput style={styles.field.input} onChangeText={onChangeHours} value={hours} maxValue={23} />
+          <NumberInput style={AppStyles.field.input} onChangeText={onChangeHours} value={hours} maxValue={23} />
           <Text>h</Text>
-          <NumberInput style={styles.field.input} onChangeText={onChangeMinutes} value={minutes} maxValue={59} />
+          <NumberInput style={AppStyles.field.input} onChangeText={onChangeMinutes} value={minutes} maxValue={59} />
           <Text>m</Text>
         </View>
 
@@ -151,27 +157,5 @@ const styles = StyleSheet.create({
     marginHorizontal: 0,
     paddingVertical: 6,
     paddingHorizontal: 10,
-  },
-  field: {
-    gap: 8,
-    label: {
-      fontSize: 16,
-      fontWeight: '600',
-      marginTop: 20,
-    } as TextStyle,
-    input: {
-      backgroundColor: '#F8FAFC',
-      borderWidth: 1,
-      borderColor: '#2FE1C7',
-      borderRadius: 4,
-    } as ViewStyle,
-    select: {
-      backgroundColor: '#F8FAFC',
-      borderWidth: 1,
-      borderColor: '#2FE1C7',
-      borderRadius: 4,
-      overflow: "hidden",
-      height: 33,
-    } as ViewStyle,
   },
 });

@@ -19,7 +19,7 @@ export interface Task {
 	type: TaskType;
 	name: string;
 	reminder: Reminder;
-	addedDate: Date;
+	created: Date;
 }
 
 export function getTitle(type: TaskType) {

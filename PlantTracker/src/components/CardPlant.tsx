@@ -20,7 +20,7 @@ export function CardPlant(props: CardPlantProps): JSX.Element {
 			<Card>
 				<View style={styles.card}>
 					<View style={styles.photo}>
-						<Image style={styles.photo} source={{uri: plant.photoUrl}}></Image>
+						{ plant.photoUrl && <Image style={styles.photo} source={{uri: plant.photoUrl}}></Image> }
 					</View>
 					<View style={styles.center}>
 						<Text style={styles.header}>{plant.name}</Text>

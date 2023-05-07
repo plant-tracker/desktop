@@ -6,9 +6,7 @@ import {
   StyleSheet,
   Text,
   TextInput,
-  TextStyle,
   View,
-  ViewStyle,
 } from 'react-native';
 import { Picker } from '@react-native-picker/picker';
 import { AppContext, Page } from '../model/AppContext';
@@ -16,39 +14,50 @@ import { Layout } from './layout';
 import { AppButton } from '../components/AppButton';
 import AppStyles from '../AppStyles';
 import { Plant } from '../model/plant';
+import { repository } from '../model/firebase';
 
-export function AddPlantPage(): JSX.Element {
+export type AddPlantProps = {
+  editedPlant?: Plant;
+};
+
+export function AddPlantPage(props: AddPlantProps): JSX.Element {
 
   const { setPage, userStorage } = useContext(AppContext)!;
 
-  const [name, onChangeName] = React.useState('');
-  const [type, onChangeType] = React.useState('fern');
-  const [species, onChangeSpecies] = React.useState('');
-  const [location, onChangeLocation] = React.useState('');
-  const [temperature, setTemperature] = React.useState('cool');
-  const [light, setLight] = React.useState('low');
-  const [humidity, setHumidity] = React.useState('low');
+  const [name, onChangeName] = React.useState(props.editedPlant?.name || '');
+  const [type, onChangeType] = React.useState(props.editedPlant?.type || 'fern');
+  const [species, onChangeSpecies] = React.useState(props.editedPlant?.species || '');
+  const [location, onChangeLocation] = React.useState(props.editedPlant?.location || '');
+  const [temperature, setTemperature] = React.useState(props.editedPlant?.temperature || 'cool');
+  const [light, setLight] = React.useState(props.editedPlant?.light || 'low');
+  const [humidity, setHumidity] = React.useState(props.editedPlant?.humidity || 'low');
 
-  const save = () => {
+  const save = async () => {
     if (!name || !location || !species) {
       Alert.alert('Please fill in all fields');
       return;
     }
 
     const plant: Plant = {
-      addedDate: new Date(),
+      id: props.editedPlant?.id,
+      created: new Date(),
       humidity: humidity as any,
       light: light as any,
       location: location,
       name: name,
-      photoUrl: 'TODO', //
+      photoUrl: 'TODO',
       species: species,
       temperature: temperature as any,
       type: type as any,
     };
 
-    // TODO - API
-    userStorage.plants.push(plant);
+    if (props.editedPlant) {
+      await repository.updatePlant(plant, userStorage.tasks);
+      Object.assign(props.editedPlant, plant);
+    } else {
+      await repository.addPlant(plant);
+      userStorage.plants.push(plant);
+    }
     setPage(Page.Plants);
   };
 
@@ -64,7 +73,7 @@ export function AddPlantPage(): JSX.Element {
   });
 
   return (
-    <Layout headerTitle='Add plant' headerIconBlob={require('../assets/icon-plant.svg')} onSave={() => save()}>
+    <Layout headerTitle={props.editedPlant ? 'Edit plant' : 'Add plant'} headerIconBlob={require('../assets/icon-plant.svg')} onSave={() => save()}>
 
       <View style={[styles.columns, {flexDirection: dimensions.width >= 150 + 360 * 2 + 20 ? 'row' : 'column'}]}>
 
@@ -82,15 +91,15 @@ export function AddPlantPage(): JSX.Element {
         <View style={styles.card}>
           <Text style={styles.header}>General</Text>
 
-          <View style={styles.field}>
-            <Text style={styles.field.label}>Name</Text>
-            <TextInput style={styles.field.input} onChangeText={onChangeName} value={name} placeholder='Franek, Czarek, etc.' placeholderTextColor='#B8BCCA' />
+          <View style={AppStyles.field}>
+            <Text style={AppStyles.field.label}>Name</Text>
+            <TextInput style={AppStyles.field.input} onChangeText={onChangeName} value={name} placeholder='Franek, Czarek, etc.' placeholderTextColor='#B8BCCA' />
           </View>
 
-          <View style={styles.field}>
-            <Text style={styles.field.label}>Type</Text>
+          <View style={AppStyles.field}>
+            <Text style={AppStyles.field.label}>Type</Text>
             {/* <Dropdown label="Select Item" data={type} onSelect={onChangeType} /> */}
-            <View style={[styles.field.select]}>
+            <View style={[AppStyles.field.select]}>
               <Picker selectedValue={type} onValueChange={(itemValue, itemIndex) => onChangeType(itemValue)} >
                 <Picker.Item label="Fern" value="fern" />
                 <Picker.Item label="Seed plant" value="seed plant" />
@@ -100,14 +109,14 @@ export function AddPlantPage(): JSX.Element {
             </View>
           </View>
 
-          <View style={styles.field}>
-            <Text style={styles.field.label}>Species</Text>
-            <TextInput style={styles.field.input} onChangeText={onChangeSpecies} value={species} placeholder='Monstera deliciosa' placeholderTextColor='#B8BCCA' />
+          <View style={AppStyles.field}>
+            <Text style={AppStyles.field.label}>Species</Text>
+            <TextInput style={AppStyles.field.input} onChangeText={onChangeSpecies} value={species} placeholder='Monstera deliciosa' placeholderTextColor='#B8BCCA' />
           </View>
 
-          <View style={styles.field}>
-            <Text style={styles.field.label}>Location</Text>
-            <TextInput style={styles.field.input} onChangeText={onChangeLocation} value={location} placeholder='Living room' placeholderTextColor='#B8BCCA' />
+          <View style={AppStyles.field}>
+            <Text style={AppStyles.field.label}>Location</Text>
+            <TextInput style={AppStyles.field.input} onChangeText={onChangeLocation} value={location} placeholder='Living room' placeholderTextColor='#B8BCCA' />
           </View>
 
           <Text style={[styles.header, {marginTop: 20}]}>Preferences</Text>
@@ -119,8 +128,8 @@ export function AddPlantPage(): JSX.Element {
           <View style={styles.buttonsRow}>
             <AppButton backgroundColor={temperature === 'cool' ? '#2FE1C7' : '#BEFFE4'} textColor='black' narrow={true}
               label='Cool' onClick={() => setTemperature('cool')} buttonStyle={styles.button} textStyle={{ fontSize: 16 }} />
-            <AppButton backgroundColor={temperature === 'room' ? '#2FE1C7' : '#BEFFE4'} textColor='black' narrow={true}
-              label='Room' onClick={() => setTemperature('room')} buttonStyle={styles.button} textStyle={{ fontSize: 16 }} />
+            <AppButton backgroundColor={temperature === 'medium' ? '#2FE1C7' : '#BEFFE4'} textColor='black' narrow={true}
+              label='Medium' onClick={() => setTemperature('medium')} buttonStyle={styles.button} textStyle={{ fontSize: 16 }} />
             <AppButton backgroundColor={temperature === 'warm' ? '#2FE1C7' : '#BEFFE4'} textColor='black' narrow={true}
               label='Warm' onClick={() => setTemperature('warm')} buttonStyle={styles.button} textStyle={{ fontSize: 16 }} />
           </View>
@@ -187,27 +196,5 @@ const styles = StyleSheet.create({
     marginHorizontal: 0,
     paddingVertical: 6,
     paddingHorizontal: 10,
-  },
-  field: {
-    gap: 8,
-    label: {
-      fontSize: 16,
-      fontWeight: '600',
-      marginTop: 20,
-    } as TextStyle,
-    input: {
-      backgroundColor: '#F8FAFC',
-      borderWidth: 1,
-      borderColor: '#2FE1C7',
-      borderRadius: 4,
-    } as ViewStyle,
-    select: {
-      backgroundColor: '#F8FAFC',
-      borderWidth: 1,
-      borderColor: '#2FE1C7',
-      borderRadius: 4,
-      overflow: "hidden",
-      height: 33,
-    } as ViewStyle,
   },
 });

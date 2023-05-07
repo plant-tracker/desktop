@@ -17,9 +17,9 @@ export function Router(): JSX.Element {
       case Page.Start: return <StartPage />;
       case Page.Home: return <HomePage />;
       case Page.Plants: return <PlantsPage />;
-      case Page.AddPlant: return <AddPlantPage />;
+      case Page.AddPlant: return <AddPlantPage editedPlant={ctx.currentPlant} />;
       case Page.ViewPlant: return <ViewPlantPage plant={ctx.currentPlant!} />;
-      case Page.AddTask: return <AddTaskPage plant={ctx.currentPlant!} />;
+      case Page.AddTask: return <AddTaskPage plant={ctx.currentPlant!} editedTask={ctx.currentTask} />;
       case Page.Settings: return <SettingsPage />;
       default: return <></>;
     }

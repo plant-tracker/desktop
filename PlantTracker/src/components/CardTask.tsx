@@ -1,6 +1,6 @@
 import { Image, Pressable, StyleSheet, Text, View } from 'react-native';
 import { Card } from './Card';
-import { Task, TaskType } from '../model/task';
+import { Task } from '../model/task';
 import { Plant } from '../model/plant';
 import AppStyles from '../AppStyles';
 import { AppContext, Page } from '../model/AppContext';
@@ -38,7 +38,7 @@ export function CardTask(props: CardTaskProps): JSX.Element {
 				</View>
 
 				<View style={styles.right}>
-					<Pressable onPress={() => console.log('TODO')}>
+					<Pressable onPress={() => setPageWithPlant(Page.AddTask, props.plant, task)}>
 						<Image source={require('../assets/icon-pen-edit.svg')}/>
 					</Pressable>
 				</View>

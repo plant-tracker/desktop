@@ -1,5 +1,6 @@
 import React, { useContext } from 'react';
 import {
+  Alert,
   Image,
   StyleSheet,
   Text,
@@ -14,6 +15,7 @@ import AppStyles from '../AppStyles';
 import { LinkButton } from '../components/LinkButton';
 import { CardTask } from '../components/CardTask';
 import { formatDate } from '../model/calculateNextTime';
+import { repository } from '../model/firebase';
 
 export type ViewPlantProps = {
 	plant: Plant;
@@ -21,9 +23,26 @@ export type ViewPlantProps = {
 
 export function ViewPlantPage(props: ViewPlantProps): JSX.Element {
 
-  const { setPageWithPlant, userStorage } = useContext(AppContext)!;
+  const { setPageWithPlant, setPage, userStorage } = useContext(AppContext)!;
 
   const plant = props.plant;
+
+  const deletePlantAsk = () => {
+    Alert.alert('Delete plant', 'Are you sure you want to delete this plant?', [
+      {
+        text: 'Cancel', style: 'cancel',
+      },
+      {
+        text: 'DELETE', style: 'destructive', onPress: () => deletePlantReally(),
+      },
+    ]);
+  };
+
+  const deletePlantReally = async () => {
+    await repository.deletePlant(plant);
+    userStorage.plants = userStorage.plants.filter(p => p !== plant);
+    setPage(Page.Plants);
+  };
 
   return (
     <Layout headerTitle='Plant info' headerIconBlob={require('../assets/icon-plant.svg')}>
@@ -38,14 +57,14 @@ export function ViewPlantPage(props: ViewPlantProps): JSX.Element {
 
             <View style={styles.row}>
               <Image source={require('../assets/icon-calendar.svg')} />
-              <Text>Date added: {formatDate(plant.addedDate)}</Text>
+              <Text>Date added: {formatDate(plant.created)}</Text>
             </View>
 
             <Text style={[styles.header, {marginTop: 20, marginBottom: 10}]}>Actions</Text>
 
-            <LinkButton iconBlob={require('../assets/icon-edit-doc.svg')} label='Edit plant' onClick={() => console.log('TODO')} />
+            <LinkButton iconBlob={require('../assets/icon-edit-doc.svg')} label='Edit plant' onClick={() => setPageWithPlant(Page.AddPlant, plant)} />
             <View style={{marginTop: 10}} />
-            <LinkButton iconBlob={require('../assets/icon-trash.svg')} label='Delete plant' onClick={() => console.log('TODO')} />
+            <LinkButton iconBlob={require('../assets/icon-trash.svg')} label='Delete plant' onClick={() => deletePlantAsk()} />
 
           </View>
 

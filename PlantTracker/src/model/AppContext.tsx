@@ -1,5 +1,5 @@
 import React, { ReactNode, createContext, useState } from 'react';
-import { SAMPLE_USER_STORAGE, UserStorage } from './userStorage';
+import { UserStorage } from './userStorage';
 import { Plant } from './plant';
 import { Task } from './task';
 import { Notifications } from '../notifications';
@@ -18,6 +18,7 @@ export type AppContextType = {
 	page: Page,
 	setPage: (page: Page) => void,
   userStorage: UserStorage;
+  setUserStorage: (data: UserStorage) => void;
 
   currentPlant?: Plant;
   setPageWithPlant: (page: Page, plant: Plant, task?: Task) => void;
@@ -61,8 +62,8 @@ const savedAppReducer = (state, action) => {
 export const AppContext = createContext<AppContextType | null>(null);
 
 export function AppProvider(props: { children: ReactNode }) {
-  const [page, setPage] = useState(Page.Home);
-  const [userStorage, setUserStorage] = useState(SAMPLE_USER_STORAGE);
+  const [page, setPage] = useState(Page.Start);
+  const [userStorage, setUserStorage] = useState<UserStorage>({ email: '', plants: [], tasks: [] });
   const [currentPlant, setCurrentPlant] = useState<Plant>();
   const [currentTask, setCurrentTask] = useState<Task>();
   const [enableNotifications, setEnableNotifications] = useState(true);
@@ -83,12 +84,11 @@ export function AppProvider(props: { children: ReactNode }) {
     notif = new Notifications();
     notif.start();
     setNotificationService(notif);
-    notif.set(userStorage.tasks);
   }
   // when list of tasks or option to enable notifications change, update the service
-  console.log('--- Notifications - update', enableNotifications, userStorage.tasks);
+  console.log('--- Notifications - update', enableNotifications, userStorage?.tasks);
   notif = notif || notificationService;
-  if (enableNotifications)
+  if (enableNotifications && userStorage)
     notif!.set(userStorage.tasks);
   else
     notif!.set([]);
@@ -97,7 +97,7 @@ export function AppProvider(props: { children: ReactNode }) {
     <AppContext.Provider
       value={{
         page, setPage,
-        userStorage,
+        userStorage, setUserStorage,
         currentPlant,
         currentTask,
         setPageWithPlant,
