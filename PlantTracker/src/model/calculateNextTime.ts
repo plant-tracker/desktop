@@ -15,7 +15,7 @@ export function getRemaining(task: Task): Remaining {
 	} else {
 		// one day time in milliseconds
 		const ONE_DAY_MS = 1000 * 60 * 60 * 24
-		const daysPassedSinceReminderWasCreated = (now.valueOf() - task.addedDate.valueOf()) / ONE_DAY_MS;
+		const daysPassedSinceReminderWasCreated = (now.valueOf() - task.created.valueOf()) / ONE_DAY_MS;
 		const reminderOccursInXDays = daysPassedSinceReminderWasCreated % task.reminder.everyXDays;
 		if (reminderOccursInXDays > 1)
 			return { type: 'days', days: reminderOccursInXDays } as RemainingDays;

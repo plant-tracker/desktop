@@ -2,6 +2,7 @@ import React, { PropsWithChildren, useContext } from 'react';
 import {
   Image,
   ImageBackground,
+  Linking,
   SafeAreaView,
   ScrollView,
   StyleSheet,
@@ -14,6 +15,7 @@ import { AppContext, Page } from '../model/AppContext';
 import { IconButton } from '../components/IconButton';
 import { FlexAlignType } from 'react-native-windows/types';
 import { CounterStat } from '../components/CounterStat';
+import { logout } from '../model/firebase';
 
 type LayoutProps = {
   headerIconBlob: any,
@@ -25,10 +27,15 @@ export function Layout(props: PropsWithChildren<LayoutProps>): JSX.Element {
 
   const { page, setPage, userStorage } = useContext(AppContext)!;
 
+  const logoutAndRedirect = async () => {
+    await logout();
+    setPage(Page.Start);
+  };
+
   const buttonsDefault = <>
     <AppButton backgroundColor='#3ddc84' textColor='black' iconBlob={require('../assets/icon-android.png')} narrow={true}
-      label='Download Android App' onClick={() => console.log('TODO')} />
-    <IconButton iconBlob={require('../assets/icon-github.svg')} onClick={() => console.log('TODO')} />
+      label='Download Android App' onClick={() => Linking.openURL('https://github.com/plant-tracker/mobile')} />
+    <IconButton iconBlob={require('../assets/icon-github.svg')} onClick={() => Linking.openURL('https://github.com/plant-tracker')} />
   </>;
   const buttonsSave = <>
     <AppButton backgroundColor='#2FE1C7' textColor='black' iconBlob={require('../assets/icon-save.svg')} narrow={true}
@@ -52,7 +59,7 @@ export function Layout(props: PropsWithChildren<LayoutProps>): JSX.Element {
 
             <View style={styles.leftBar.iconsBottom}>
               <IconButton iconBlob={require('../assets/icon-settings.svg')} label='Settings' onClick={() => setPage(Page.Settings)} />
-              <IconButton iconBlob={require('../assets/icon-logout.png')} label='Log out' onClick={() => console.log('TODO')} />
+              <IconButton iconBlob={require('../assets/icon-logout.png')} label='Log out' onClick={() => logoutAndRedirect() } />
             </View>
 
           </View>

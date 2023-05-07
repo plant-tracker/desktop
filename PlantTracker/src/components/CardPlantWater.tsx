@@ -1,9 +1,11 @@
 import { FlexAlignType, Image, Pressable, StyleSheet, Text, View } from 'react-native';
 import { Card } from './Card';
-import { Task, TaskType } from '../model/task';
+import { Task } from '../model/task';
 import AppStyles from '../AppStyles';
 import { Badge } from './Badge';
 import { getRemainingTime } from '../model/calculateNextTime';
+import { useContext } from 'react';
+import { AppContext, Page } from '../model/AppContext';
 
 export type CardPlantWaterProps = {
 	task: Task;
@@ -13,12 +15,14 @@ export function CardPlantWater(props: CardPlantWaterProps): JSX.Element {
 	const task = props.task;
 	const plant = task.plant;
 
+  const { setPageWithPlant } = useContext(AppContext)!;
+
 	return (
-		<Pressable onPress={() => console.log('TODO')}>
+		<Pressable onPress={() => setPageWithPlant(Page.ViewPlant, plant)}>
 			<Card>
 				<View style={styles.card}>
 					<View style={styles.photo}>
-						<Image style={styles.photo} source={{uri: plant.photoUrl}}></Image>
+						{ plant.photoUrl && <Image style={styles.photo} source={{uri: plant.photoUrl}}></Image> }
 					</View>
 					<View style={styles.center}>
 						<Text style={styles.header}>{task.name}</Text>

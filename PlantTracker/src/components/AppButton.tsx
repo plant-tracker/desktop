@@ -18,6 +18,7 @@ type AppButtonProps = {
   narrow?: boolean,
   buttonStyle?: ViewStyle,
   textStyle?: TextStyle,
+  disabled?: boolean,
   onClick: () => void,
 };
 
@@ -28,8 +29,9 @@ export function AppButton(props: AppButtonProps): JSX.Element {
     styles.button,
     props.buttonStyle,
     { backgroundColor: props.backgroundColor },
-    hovered && styleHovered,
-    pressed && stylePressed,
+    props.disabled && { backgroundColor: '#a0a0a0' },
+    !props.disabled && hovered && styleHovered,
+    !props.disabled && pressed && stylePressed,
   ];
 
   const stylePressed = { opacity: 0.7 };
@@ -62,7 +64,7 @@ export function AppButton(props: AppButtonProps): JSX.Element {
       style={({pressed}) => getStyles(pressed)}
       onHoverIn={_ => setHovered(true)}
       onHoverOut={_ => setHovered(false)}
-      onPress={props.onClick}
+      onPress={() => !props.disabled && props.onClick()}
     >
       {props.iconBlob && <Image source={props.iconBlob}/>}
 			<Text style={[styles.button.text, props.textStyle, { color: props.textColor }]}>

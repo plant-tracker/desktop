@@ -1,5 +1,6 @@
 import React, { useContext } from 'react';
 import {
+  Linking,
   StyleSheet,
   Switch,
   Text,
@@ -33,7 +34,7 @@ export function SettingsPage(): JSX.Element {
 
         <Text style={[styles.header, {marginTop: 30}]}>Actions</Text>
 
-        <LinkButton iconBlob={require('../assets/icon-github.svg')} label='View source code' onClick={() => console.log('TODO')} />
+        <LinkButton iconBlob={require('../assets/icon-github.svg')} label='View source code' onClick={() => Linking.openURL('https://github.com/plant-tracker')} />
 
       </View>
     </Layout>
@@ -41,17 +42,6 @@ export function SettingsPage(): JSX.Element {
 }
 
 const styles = StyleSheet.create({
-  columns: {
-    display: 'flex',
-    flexDirection: 'row',
-    justifyContent: 'center',
-    flexWrap: 'wrap',
-    maxWidth: 760,
-    gap: 40,
-  },
-  column: {
-    width: 360,
-  },
   row: {
     display: 'flex',
     flexDirection: 'row',
@@ -67,9 +57,5 @@ const styles = StyleSheet.create({
   label: {
     ...AppStyles.text,
     fontSize: 18,
-  },
-  addTaskButton: {
-    paddingHorizontal: 50,
-    alignSelf: 'center',
   },
 });
