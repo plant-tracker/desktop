@@ -31,6 +31,7 @@ export function AddPlantPage(props: AddPlantProps): JSX.Element {
   const [temperature, setTemperature] = React.useState(props.editedPlant?.temperature || 'cool');
   const [light, setLight] = React.useState(props.editedPlant?.light || 'low');
   const [humidity, setHumidity] = React.useState(props.editedPlant?.humidity || 'low');
+  const [photoUrl, setPhotoUrl] = React.useState(props.editedPlant?.photoUrl || '');
 
   const save = async () => {
     if (!name || !location || !species) {
@@ -45,7 +46,7 @@ export function AddPlantPage(props: AddPlantProps): JSX.Element {
       light: light as any,
       location: location,
       name: name,
-      photoUrl: 'TODO',
+      photoUrl: photoUrl,
       species: species,
       temperature: temperature as any,
       type: type as any,
@@ -59,6 +60,12 @@ export function AddPlantPage(props: AddPlantProps): JSX.Element {
       userStorage.plants.push(plant);
     }
     setPage(Page.Plants);
+  };
+
+  const selectPhoto = () => {
+    // select file component did not compile for Windows, using just URL
+    // But Alert.prompt is also not implemented in RN for Windows...
+    // Alert.prompt('Select photo', 'Enter photo URL', setPhotoUrl, undefined, photoUrl, 'url');
   };
 
   const { width } = Dimensions.get('window');
@@ -79,12 +86,18 @@ export function AddPlantPage(props: AddPlantProps): JSX.Element {
 
         <View style={styles.card}>
           <Text style={styles.header}>Plant photo</Text>
-          {/* <Image TODO /> */}
+          { photoUrl && <Image style={styles.photo} source={{uri: photoUrl}} /> }
+
+          <View style={AppStyles.field}>
+            <Text style={AppStyles.field.label}>Photo URL</Text>
+            <TextInput style={AppStyles.field.input} onChangeText={setPhotoUrl} value={photoUrl} placeholder='https://link.com/to/plant/photo.jpg' placeholderTextColor='#B8BCCA' />
+          </View>
+
           <View style={styles.buttonsRow}>
-            <AppButton backgroundColor='#2FE1C7' textColor='black' iconBlob={require('../assets/icon-add-plant-2.svg')} narrow={true}
-              label='Upload image' onClick={() => console.log('TODO')} buttonStyle={styles.button} textStyle={{ fontSize: 16 }} />
+            {/* <AppButton backgroundColor='#2FE1C7' textColor='black' iconBlob={require('../assets/icon-add-plant-2.svg')} narrow={true}
+              label='Upload image' onClick={selectPhoto} buttonStyle={styles.button} textStyle={{ fontSize: 16 }} /> */}
             <AppButton backgroundColor='#FF5D5D' textColor='black' iconBlob={require('../assets/icon-trash.svg')} narrow={true}
-              label='Delete image' onClick={() => console.log('TODO')} buttonStyle={styles.button} textStyle={{ fontSize: 16 }} />
+              label='Delete image' onClick={() => setPhotoUrl('')} buttonStyle={styles.button} textStyle={{ fontSize: 16 }} />
           </View>
         </View>
 
@@ -123,7 +136,7 @@ export function AddPlantPage(props: AddPlantProps): JSX.Element {
 
           <View style={[styles.buttonsRow, {marginTop: 20}]}>
             <Image source={require('../assets/icon-temp.svg')} />
-            <Text>Temperature</Text>
+            <Text style={AppStyles.text}>Temperature</Text>
           </View>
           <View style={styles.buttonsRow}>
             <AppButton backgroundColor={temperature === 'cool' ? '#2FE1C7' : '#BEFFE4'} textColor='black' narrow={true}
@@ -136,7 +149,7 @@ export function AddPlantPage(props: AddPlantProps): JSX.Element {
 
           <View style={[styles.buttonsRow, {marginTop: 20}]}>
             <Image source={require('../assets/icon-sun.svg')} />
-            <Text>Light</Text>
+            <Text style={AppStyles.text}>Light</Text>
           </View>
           <View style={styles.buttonsRow}>
             <AppButton backgroundColor={light === 'low' ? '#2FE1C7' : '#BEFFE4'} textColor='black' narrow={true}
@@ -149,7 +162,7 @@ export function AddPlantPage(props: AddPlantProps): JSX.Element {
 
           <View style={[styles.buttonsRow, {marginTop: 20}]}>
             <Image source={require('../assets/icon-water.svg')} />
-            <Text>Humidity</Text>
+            <Text style={AppStyles.text}>Humidity</Text>
           </View>
           <View style={styles.buttonsRow}>
             <AppButton backgroundColor={humidity === 'low' ? '#2FE1C7' : '#BEFFE4'} textColor='black' narrow={true}
@@ -197,4 +210,10 @@ const styles = StyleSheet.create({
     paddingVertical: 6,
     paddingHorizontal: 10,
   },
+	photo: {
+		width: 125,
+		height: 125,
+		borderRadius: 10,
+		resizeMode: 'cover',
+	},
 });

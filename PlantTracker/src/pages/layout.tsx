@@ -16,6 +16,7 @@ import { IconButton } from '../components/IconButton';
 import { FlexAlignType } from 'react-native-windows/types';
 import { CounterStat } from '../components/CounterStat';
 import { logout } from '../model/firebase';
+import { UserStorageEmpty } from '../model/userStorage';
 
 type LayoutProps = {
   headerIconBlob: any,
@@ -25,10 +26,11 @@ type LayoutProps = {
 
 export function Layout(props: PropsWithChildren<LayoutProps>): JSX.Element {
 
-  const { page, setPage, userStorage } = useContext(AppContext)!;
+  const { page, setPage, userStorage, setUserStorage } = useContext(AppContext)!;
 
   const logoutAndRedirect = async () => {
     await logout();
+    setUserStorage(UserStorageEmpty);
     setPage(Page.Start);
   };
 

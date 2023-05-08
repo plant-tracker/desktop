@@ -7,6 +7,8 @@ export interface UserStorage {
 	tasks: Task[];
 }
 
+export const UserStorageEmpty: UserStorage = { email: '', plants: [], tasks: [] };
+
 const p1: Plant = {
 	name: 'Franek',
 	type: 'fern',
