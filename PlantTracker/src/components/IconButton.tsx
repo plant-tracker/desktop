@@ -38,7 +38,7 @@ export function IconButton(props: IconButtonProps): JSX.Element {
 
       text: {
         ...AppStyles.text,
-        fontSize: 11,
+        fontSize: 16,
       }
     },
   });

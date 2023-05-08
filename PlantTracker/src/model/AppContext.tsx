@@ -1,5 +1,5 @@
 import React, { ReactNode, createContext, useState } from 'react';
-import { UserStorage } from './userStorage';
+import { UserStorage, UserStorageEmpty } from './userStorage';
 import { Plant } from './plant';
 import { Task } from './task';
 import { Notifications } from '../notifications';
@@ -63,14 +63,14 @@ export const AppContext = createContext<AppContextType | null>(null);
 
 export function AppProvider(props: { children: ReactNode }) {
   const [page, setPage] = useState(Page.Start);
-  const [userStorage, setUserStorage] = useState<UserStorage>({ email: '', plants: [], tasks: [] });
+  const [userStorage, setUserStorage] = useState<UserStorage>(UserStorageEmpty);
   const [currentPlant, setCurrentPlant] = useState<Plant>();
   const [currentTask, setCurrentTask] = useState<Task>();
   const [enableNotifications, setEnableNotifications] = useState(true);
   const [notificationService, setNotificationService] = useState<Notifications>();
   // const [savedApp, setSavedApp] = useReducer(savedAppReducer, []);
 
-  const setPageWithPlant = (page: Page, plant: Plant, task?: Task) => {
+  const setPageWithPlant = (page: Page, plant?: Plant, task?: Task) => {
     setCurrentPlant(plant);
     setCurrentTask(task);
     setPage(page);
@@ -96,7 +96,8 @@ export function AppProvider(props: { children: ReactNode }) {
   return (
     <AppContext.Provider
       value={{
-        page, setPage,
+        page,
+        setPage: (page: Page) => setPageWithPlant(page, undefined, undefined),
         userStorage, setUserStorage,
         currentPlant,
         currentTask,

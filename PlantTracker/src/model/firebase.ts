@@ -99,6 +99,7 @@ export const repository = {
 
 	addPlant: async (plant: Plant): Promise<void> => {
 		const plantDb = convertToDb(plant, []);
+		delete plantDb.id;
 		console.log('addPlant', plantDb);
 		const res = await addDoc(collection(repository.db(), 'users', repository.uid(), 'plants'), plantDb);
 		plant.id = res.id;

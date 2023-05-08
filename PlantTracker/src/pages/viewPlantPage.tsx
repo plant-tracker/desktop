@@ -44,6 +44,9 @@ export function ViewPlantPage(props: ViewPlantProps): JSX.Element {
     setPage(Page.Plants);
   };
 
+  // this happens after clicking Delete Plant
+  if (!plant) return <></>;
+
   return (
     <Layout headerTitle='Plant info' headerIconBlob={require('../assets/icon-plant.svg')}>
 
@@ -57,7 +60,7 @@ export function ViewPlantPage(props: ViewPlantProps): JSX.Element {
 
             <View style={styles.row}>
               <Image source={require('../assets/icon-calendar.svg')} />
-              <Text>Date added: {formatDate(plant.created)}</Text>
+              <Text style={AppStyles.text}>Date added: {formatDate(plant.created)}</Text>
             </View>
 
             <Text style={[styles.header, {marginTop: 20, marginBottom: 10}]}>Actions</Text>

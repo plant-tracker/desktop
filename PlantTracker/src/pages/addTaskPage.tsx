@@ -85,7 +85,7 @@ export function AddTaskPage(props: AddTaskProps): JSX.Element {
 
       <View style={styles.row}>
         <Image source={require('../assets/icon-calendar.svg')} />
-        <Text>Date added: {formatDate(plant.created)}</Text>
+        <Text style={AppStyles.text}>Date added: {formatDate(plant.created)}</Text>
       </View>
 
       <View style={[styles.card, {marginTop: 30}]}>
@@ -93,7 +93,7 @@ export function AddTaskPage(props: AddTaskProps): JSX.Element {
         <View style={AppStyles.field}>
           <Text style={[AppStyles.field.label, {marginTop: 0}]}>Type</Text>
           <View style={AppStyles.field.select}>
-            <Picker selectedValue={type} onValueChange={(itemValue, itemIndex) => onChangeType(itemValue)} >
+            <Picker selectedValue={type} onValueChange={(itemValue, itemIndex) => onChangeType(itemValue)} style={AppStyles.text} >
               <Picker.Item label="Water" value="water" />
               <Picker.Item label="Fertilize" value="fertilize" />
               <Picker.Item label="Spray" value="spray" />
@@ -110,17 +110,17 @@ export function AddTaskPage(props: AddTaskProps): JSX.Element {
         <Text style={AppStyles.field.label}>Frequency:</Text>
 
         <View style={styles.row}>
-          <Text>Repeat every</Text>
+          <Text style={AppStyles.text}>Repeat every</Text>
           <NumberInput style={AppStyles.field.input} onChangeText={onChangeXDays} value={xDays} maxValue={366} />
-          <Text>day(s)</Text>
+          <Text style={AppStyles.text}>day(s)</Text>
         </View>
 
         <View style={[styles.row, {marginTop: 10}]}>
-          <Text>at time</Text>
+          <Text style={AppStyles.text}>at time</Text>
           <NumberInput style={AppStyles.field.input} onChangeText={onChangeHours} value={hours} maxValue={23} />
-          <Text>h</Text>
+          <Text style={AppStyles.text}>h</Text>
           <NumberInput style={AppStyles.field.input} onChangeText={onChangeMinutes} value={minutes} maxValue={59} />
-          <Text>m</Text>
+          <Text style={AppStyles.text}>m</Text>
         </View>
 
       </View>
