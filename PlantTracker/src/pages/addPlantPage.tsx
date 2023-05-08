@@ -53,8 +53,8 @@ export function AddPlantPage(props: AddPlantProps): JSX.Element {
     };
 
     if (props.editedPlant) {
-      await repository.updatePlant(plant, userStorage.tasks);
       Object.assign(props.editedPlant, plant);
+      await repository.updatePlant(props.editedPlant, userStorage.tasks);
     } else {
       await repository.addPlant(plant);
       userStorage.plants.push(plant);

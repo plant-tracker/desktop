@@ -41,6 +41,8 @@ export function ViewPlantPage(props: ViewPlantProps): JSX.Element {
   const deletePlantReally = async () => {
     await repository.deletePlant(plant);
     userStorage.plants = userStorage.plants.filter(p => p !== plant);
+    // delete all related tasks
+    userStorage.tasks = userStorage.tasks.filter(t => t.plant !== plant);
     setPage(Page.Plants);
   };
 
